@@ -1,0 +1,22 @@
+fake_laser_node:
+  Subscribed_Topics:
+    map: "/map"
+
+  Published_Topics:
+    laser: "/laser_fake"
+
+  Parameters:
+    ## Frame Ids
+    base_frameId: "base_link"
+    odom_frameId: "odom"
+    map_frameId: "map"
+    laser_frameId: "laser"
+    ## Rate
+    pose_update_duration: 0.01
+    laserscan_publish_duration: 0.05
+    ## Laser parameter
+    laser_range_min: 0.05
+    laser_range_max: 10
+    laser_offset_x: 0.0 # offset from base frame
+    laser_offset_y: 0.0
+    laser_offset_z: 0.5
