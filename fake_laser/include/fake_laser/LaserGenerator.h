@@ -10,10 +10,9 @@
 #ifndef LASER_GENERATOR_H
 #define LASER_GENERATOR_H
 
-#include <occupancy_grid_map/OccupancyGridMap.h>
+#include <occupancyMap/OccupancyGridMap.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
-#include <functional>
 
 class LaserGenerator
 {

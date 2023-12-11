@@ -18,7 +18,7 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <pcl_conversions/pcl_conversions.h>
 
-#include <occupancy_grid_map/OccupancyGridMapRosConverter.h>
+#include <occupancyMap/OccupancyGridMapRosConverter.h>
 #include "fake_laser/LaserGenerator.h"
 
 namespace ros

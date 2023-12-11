@@ -7,11 +7,9 @@ find_package(Eigen3 REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   ros_node_utils
-  tf2_ros
   ros_transform_utils
-  pcl_conversions
   ros_pcl_utils
-  occupancy_grid_map
+  elevation_map_server
 )
 
 catkin_package(
@@ -22,11 +20,9 @@ catkin_package(
   CATKIN_DEPENDS 
     roscpp
     ros_node_utils
-    tf2_ros
     ros_transform_utils
-    pcl_conversions
     ros_pcl_utils
-    occupancy_grid_map
+    elevation_map_server
 )
 
 ###########

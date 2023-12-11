@@ -13,7 +13,7 @@
   <depend>ros_transform_utils</depend>
   <depend>pcl_conversions</depend>
   <depend>ros_pcl_utils</depend>
-  <depend>occupancy_grid_map</depend>
+  <depend>elevation_map_server</depend>
 
   <export>
   </export>
