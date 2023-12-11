@@ -1,0 +1,22 @@
+<launch>
+  <arg name="package" value="fake_odom"/>
+  <arg name="package_dir" value="$(find fake_odom)"/>
+
+<!-- Read parameters -->
+  <rosparam file="$(arg package_dir)/config/params.yaml" command="load" subst_value="true" />
+
+<!-- Launch fake odom -->
+  <node pkg="$(arg package)" type="$(arg package)_node" name="$(arg package)_node" output="screen" />
+
+<!-- Launch joystick teleoperation -->
+
+  <!-- Receive the joystick input and publish joystick msg -->
+  <node pkg="joy" type="joy_node" name="joy_node" output="screen">
+    <param name="dev" value="/dev/input/js0" />
+  </node>
+  <!-- Receive the joystick msg and publish cmd_vel topic -->
+  <node pkg="teleop_twist_joy" type="teleop_node" name="teleop_joy_node" output="screen"></node>
+
+<!-- Launch Rviz -->
+  <node pkg="rviz" type="rviz" name="$(arg package)_rviz" args="-d $(arg package_dir)/rviz/$(arg package).rviz"></node>
+</launch>

@@ -1,0 +1,14 @@
+fake_odom_node:
+  Subscribed_Topics:
+    control_input: "/cmd_vel"
+    2d_pose_estimate: "/initialpose"
+
+  Published_Topics:
+    odometry: "/odom_fake"
+
+  Parameters:
+    base_frameId: "base_link"
+    odom_frameId: "odom"
+    map_frameId: "map"
+    odom_publish_duration: 0.01
+    use_map2odom_broadcaster: true

@@ -1,0 +1,7 @@
+<launch>
+  <!-- Launch fake odom node -->
+  <include file="$(find fake_odom)/launch/fake_odom_keyboard.launch" />
+  
+  <!-- Launch fake laser node -->
+  <include file="$(find fake_laser)/launch/fake_laser.launch" />
+</launch>

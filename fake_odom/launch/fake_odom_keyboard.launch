@@ -1,0 +1,17 @@
+<launch>
+  <arg name="package" value="fake_odom"/>
+  <arg name="package_dir" value="$(find fake_odom)"/>
+
+<!-- Read Parameters -->
+  <rosparam file="$(arg package_dir)/config/params.yaml" command="load" subst_value="true" />
+
+<!-- Launch fake odom -->
+  <node pkg="$(arg package)" type="$(arg package)_node" name="$(arg package)_node" output="screen" />
+
+<!-- Launch keyboard teleoperation -->
+  <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard"
+    output="screen"></node>
+
+<!-- Launch Rviz -->
+  <node pkg="rviz" type="rviz" name="$(arg package)_rviz" args="-d $(arg package_dir)/rviz/$(arg package).rviz"></node>
+</launch>

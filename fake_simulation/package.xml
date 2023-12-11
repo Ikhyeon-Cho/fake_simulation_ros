@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>fake_simulation</name>
+  <version>0.0.0</version>
+  <description>The fake_simulation package that bringups the other funcionalities</description>
+  <maintainer email="tre0430@korea.ac.kr">isr</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>fake_odom</exec_depend>
+  <exec_depend>fake_laser</exec_depend>
+  <!-- <exec_depend>elevationmap_server</exec_depend> -->
+
+  <export>
+  </export>
+</package>
