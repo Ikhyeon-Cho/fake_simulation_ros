@@ -8,7 +8,4 @@
   <!-- Launch fake laser -->
   <node pkg="$(arg package)" type="$(arg package)_node" name="$(arg package)_node" output="screen" />
 
-  <!-- Launch Rviz -->
-  <node pkg="rviz" type="rviz" name="$(arg package)_rviz"
-    args="-d $(arg package_dir)/rviz/$(arg package).rviz"></node>
 </launch>

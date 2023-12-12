@@ -1,0 +1,10 @@
+<launch>
+  <arg name="package" value="fake_odom" />
+  <arg name="package_dir" value="$(find fake_odom)" />
+
+  <include file="$(arg package_dir)/launch/fake_odom_keyboard.launch" />
+
+  <!-- Launch Rviz -->
+  <node pkg="rviz" type="rviz" name="$(arg package)_rviz"
+    args="-d $(arg package_dir)/rviz/$(arg package).rviz"></node>
+</launch>

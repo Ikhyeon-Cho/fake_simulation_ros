@@ -1,7 +1,18 @@
 <launch>
   <!-- Launch fake odom node -->
   <include file="$(find fake_odom)/launch/fake_odom_keyboard.launch" />
-  
+
   <!-- Launch fake laser node -->
   <include file="$(find fake_laser)/launch/fake_laser.launch" />
+
+  <!-- Launch occupancy map server -->
+  <include file="$(find elevation_map_server)/launch/occupancy_map_server.launch" />
+
+  <!-- Rviz -->
+  <!-- <node pkg="rviz" type="rviz" name="rviz_occupancy_map_server"
+    args="-d $(find fake_simulation)/rviz/occupancy_map_server.rviz" /> -->
+
+  <!-- RQT -->
+  <node pkg="rqt_gui" type="rqt_gui" name="rqt"
+    args="--perspective-file $(find fake_simulation)/rviz/fake_simulation.perspective" />
 </launch>

@@ -1,0 +1,11 @@
+<launch>
+  <arg name="package" value="fake_laser" />
+  <arg name="package_dir" value="$(find fake_laser)" />
+
+  <!-- Launch -->
+  <include file="$(arg package_dir)/launch/fake_laser.launch" />
+
+  <!-- Launch Rviz -->
+  <node pkg="rviz" type="rviz" name="$(arg package)_rviz"
+    args="-d $(arg package_dir)/rviz/$(arg package).rviz"></node>
+</launch>

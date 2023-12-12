@@ -12,6 +12,4 @@
   <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard"
     output="screen"></node>
 
-<!-- Launch Rviz -->
-  <node pkg="rviz" type="rviz" name="$(arg package)_rviz" args="-d $(arg package_dir)/rviz/$(arg package).rviz"></node>
 </launch>
