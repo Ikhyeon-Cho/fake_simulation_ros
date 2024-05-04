@@ -25,7 +25,7 @@ public:
     return pose2D_;
   }
 
-  void doDeadReckoning(const Eigen::Vector2d& velocity, double dt)
+  void deadReckoning(const Eigen::Vector2d& velocity, double dt)
   {
     const auto& v = velocity.x();
     const auto& w = velocity.y();

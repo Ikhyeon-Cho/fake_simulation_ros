@@ -10,7 +10,7 @@
 #ifndef LASER_GENERATOR_H
 #define LASER_GENERATOR_H
 
-#include <occupancyMap/OccupancyGridMap.h>
+#include "occupancyMap/OccupancyGridMap.h"
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 
@@ -27,7 +27,7 @@ public:
   double getMaxRange() const;
   double getMinRange() const;
 
-  void doRayCasting(const OccupancyGridMap& map, pcl::PointCloud<pcl::PointXYZI>& laser);
+  bool doRayCasting(const OccupancyGridMap& map, pcl::PointCloud<pcl::PointXYZ>& laser);
 
 private:
   Eigen::Vector2d laser_position_{ 0, 0 };

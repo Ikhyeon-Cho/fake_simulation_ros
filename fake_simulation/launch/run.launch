@@ -5,14 +5,11 @@
   <!-- Launch fake laser node -->
   <include file="$(find fake_laser)/launch/fake_laser.launch" />
 
-  <!-- Launch occupancy map server -->
-  <include file="$(find elevation_map_server)/launch/occupancy_map_server.launch" />
+  <!-- Launch map server -->
+  <node pkg="map_server" type="map_server" name="map_server" args="$(find fake_simulation)/map/map.yaml" />
 
   <!-- Rviz -->
-  <!-- <node pkg="rviz" type="rviz" name="rviz_occupancy_map_server"
-    args="-d $(find fake_simulation)/rviz/occupancy_map_server.rviz" /> -->
+  <node pkg="rviz" type="rviz" name="rviz_occupancy_map_server"
+    args="-d $(find fake_simulation)/launch/rviz/fake_simulation.rviz" />
 
-  <!-- RQT -->
-  <node pkg="rqt_gui" type="rqt_gui" name="rqt"
-    args="--perspective-file $(find fake_simulation)/rviz/fake_simulation.perspective" />
 </launch>

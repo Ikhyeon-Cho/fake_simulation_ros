@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(fake_odom)
-add_compile_options(-std=c++14)
+add_compile_options(-std=c++17)
 
 find_package(Eigen3 REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  ros_node_utils
-  ros_transform_utils
+  tf2_ros
+  tf2_eigen
 )
 
 catkin_package(
@@ -16,8 +16,8 @@ catkin_package(
     # ${PROJECT_NAME}
   CATKIN_DEPENDS 
     roscpp
-    ros_node_utils
-    ros_transform_utils
+    tf2_ros
+    tf2_eigen
 )
 
 ###########
@@ -30,7 +30,8 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(fake_odom_node src/fake_odom_node.cpp
+add_executable(fake_odom_node 
+  src/fake_odom/fake_odom_node.cpp
   src/fake_odom/FakeOdometry.cpp
   
 )

@@ -1,15 +1,14 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(fake_laser)
-add_compile_options(-std=c++14)
+add_compile_options(-std=c++17)
 
 find_package(PCL REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  ros_node_utils
-  ros_transform_utils
-  ros_pcl_utils
-  elevation_map_server
+  grid_map_core
+  grid_map_ros
+  grid_map_cv
 )
 
 catkin_package(
@@ -19,10 +18,9 @@ catkin_package(
     # ${PROJECT_NAME}
   CATKIN_DEPENDS 
     roscpp
-    ros_node_utils
-    ros_transform_utils
-    ros_pcl_utils
-    elevation_map_server
+    grid_map_core
+    grid_map_ros
+    grid_map_cv
 )
 
 ###########
@@ -36,9 +34,13 @@ include_directories(
   ${PCL_INCLUDE_DIRS}
 )
 
-add_executable(fake_laser_node src/fake_laser_node.cpp
+add_executable(fake_laser_node 
+  src/fake_laser/fake_laser_node.cpp
   src/fake_laser/FakeLaser.cpp
   src/fake_laser/LaserGenerator.cpp
+  src/occupancyMap/OccupancyGridMap.cpp
+  src/occupancyMap/OccupancyGridMapHelper.cpp
+  src/occupancyMap/OccupancyGridMapRosConverter.cpp
   
 )
 target_link_libraries(fake_laser_node

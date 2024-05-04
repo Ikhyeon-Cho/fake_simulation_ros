@@ -8,8 +8,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
-  <depend>ros_node_utils</depend>
-  <depend>ros_transform_utils</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_eigen</depend>
   <exec_depend>teleop_twist_keyboard</exec_depend>
   <exec_depend>teleop_twist_joy</exec_depend>
   

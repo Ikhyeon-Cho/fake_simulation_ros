@@ -9,79 +9,70 @@
 
 #include "fake_odom/FakeOdometry.h"
 
-namespace ros
+void FakeOdometry::cmdVelCallback(const geometry_msgs::TwistConstPtr& msg)
 {
-FakeOdometry::FakeOdometry()
-{
-  deadReckoning_timer.start();
-}
-
-void FakeOdometry::saveControlInput(const geometry_msgs::TwistConstPtr& msg)
-{
-  control_input_msg_ = *msg;
+  cmd_vel_ = *msg;
 }
 
 void FakeOdometry::setInitialPose(const geometry_msgs::PoseWithCovarianceStampedConstPtr& msg)
 {
-  geometry_msgs::PoseWithCovarianceStamped pose_in_odom;
-  if (!transform_handler_.doTransform(*msg, odom_frameId.param(), pose_in_odom))
+  geometry_msgs::PoseWithCovarianceStamped initialpose_in_odom;
+  auto [has_transform, transform] = tf_.getTransform(msg->header.frame_id, odom_frame);
+  if (!has_transform || !utils::tf::doTransform(*msg, initialpose_in_odom, transform))
   {
-    std::cout << "Temp: map to odom? transform is not valid. skip setting initial pose \n";
+    std::cout << "Temp: initialpose to initialpose? transform is not valid. skip setting initial pose \n";
     return;
   }
 
   // set Pose
-  double roll, pitch, yaw;
-  transform_handler_.getRPYFrom(pose_in_odom.pose.pose.orientation, roll, pitch, yaw);
-  robot_.setPose2D(Eigen::Vector3d(pose_in_odom.pose.pose.position.x, pose_in_odom.pose.pose.position.y, yaw));
+  auto [roll, pitch, initial_pose_yaw] = utils::tf::getRPYFrom(initialpose_in_odom.pose.pose.orientation);
+  const auto& initial_pose_x = initialpose_in_odom.pose.pose.position.x;
+  const auto& initial_pose_y = initialpose_in_odom.pose.pose.position.y;
+  robot_.setPose2D(Eigen::Vector3d(initial_pose_x, initial_pose_y, initial_pose_yaw));
 
   // reset velocty as zero
-  control_input_msg_ = geometry_msgs::Twist();
+  cmd_vel_ = geometry_msgs::Twist();
 }
 
-void FakeOdometry::doDeadReckoning(const ros::TimerEvent& event)
+void FakeOdometry::deadReckoning(const ros::TimerEvent& event)
 {
-  const auto& v = control_input_msg_.linear.x;
-  const auto& w = control_input_msg_.angular.z;
-  Eigen::Vector2d velocity(v, w);
+  const auto& v = cmd_vel_.linear.x;
+  const auto& w = cmd_vel_.angular.z;
+  Eigen::Vector2d cmd_vel(v, w);
 
-  robot_.doDeadReckoning(velocity, odom_publish_duration.param());
-  const auto& current_pose2D = robot_.getPose2D();
+  robot_.deadReckoning(cmd_vel, 1 / odom_pub_rate_);
+  const auto& pose_2d = robot_.getPose2D();
 
   // Publish odom and tf
   nav_msgs::Odometry msg_odom;
-  toOdomMsg(current_pose2D, msg_odom);
-  odom_publisher.publish(msg_odom);
+  toOdomMsg(pose_2d, msg_odom);
+  pub_odom_.publish(msg_odom);
 
-  ros::Time timestamp(ros::Time::now());
   geometry_msgs::Transform transform;
-  toTransformMsg(current_pose2D, transform);
-  transform_handler_.sendTransform(transform, odom_frameId.param(), base_frameId.param(), timestamp);
+  toTransformMsg(pose_2d, transform);
+  tf_.sendTransform(transform, odom_frame, baselink_frame, ros::Time::now());
 
-  if (use_map2odom_broadcaster.param())
+  if (enable_map2odom_)
   {
     geometry_msgs::Transform transform;
     toTransformMsg(Eigen::Vector3d(0, 0, 0), transform);
-    transform_handler_.sendTransform(transform, map_frameId.param(), odom_frameId.param(), timestamp);
+    tf_.sendTransform(transform, map_frame, odom_frame, ros::Time::now());
   }
 }
 
 void FakeOdometry::toOdomMsg(const Eigen::Vector3d& pose2D, nav_msgs::Odometry& msg)
 {
-  msg.header.frame_id = odom_frameId.param();
+  msg.header.frame_id = odom_frame;
   msg.header.stamp = ros::Time::now();
-  msg.child_frame_id = base_frameId.param();
+  msg.child_frame_id = baselink_frame;
 
-  // position
   msg.pose.pose.position.x = pose2D.x();
   msg.pose.pose.position.y = pose2D.y();
   msg.pose.pose.position.z = 0;
-
-  // orientation
-  transform_handler_.getQuaternionFrom(0, 0, pose2D.z(), msg.pose.pose.orientation);
+  msg.pose.pose.orientation = utils::tf::getQuaternionMsgFrom(0, 0, pose2D.z());
 
   // velocity
-  msg.twist.twist = control_input_msg_;
+  msg.twist.twist = cmd_vel_;
 }
 
 void FakeOdometry::toTransformMsg(const Eigen::Vector3d& pose2D, geometry_msgs::Transform& transform)
@@ -89,9 +80,6 @@ void FakeOdometry::toTransformMsg(const Eigen::Vector3d& pose2D, geometry_msgs::
   transform.translation.x = pose2D.x();
   transform.translation.y = pose2D.y();
 
-  geometry_msgs::Quaternion rotation;
-  transform_handler_.getQuaternionFrom(0, 0, pose2D.z(), rotation);
+  auto rotation = utils::tf::getQuaternionMsgFrom(0, 0, pose2D.z());
   transform.rotation = rotation;
 }
-
-}  // namespace ros
