@@ -66,7 +66,6 @@ public:
                                                     false) };
 
 private:
-  // PointcloudProcessor<pcl::PointXYZI> pointcloud_handler_;
   OccupancyGridMap occupancy_map_;
   LaserGenerator laser_generator_;
 };

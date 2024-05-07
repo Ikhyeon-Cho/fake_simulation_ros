@@ -50,7 +50,7 @@ void FakeLaser::updateLaserPose(const ros::TimerEvent& event)
 
 void FakeLaser::generateFakeLaser(const ros::TimerEvent& event)
 {
-  auto ray_laser = boost::make_shared<pcl::PointCloud<pcl::PointXYZ>>();
+  auto ray_laser = boost::make_shared<pcl::PointCloud<pcl::PointWithRange>>();
   ray_laser->header.frame_id = map_frame;
   if (!laser_generator_.doRayCasting(occupancy_map_, *ray_laser))
   {
@@ -62,15 +62,15 @@ void FakeLaser::generateFakeLaser(const ros::TimerEvent& event)
   if (!has_transform_m2l)
     return;
 
-  auto fake_laser_raw = utils::pcl::transformPointcloud<pcl::PointXYZ>(ray_laser, map2laser);
+  auto fake_laser_raw = utils::pcl::transformPointcloud<pcl::PointWithRange>(ray_laser, map2laser);
 
   // filter pointcloud
-  auto fake_laser_range_filtered = utils::pcl::filterPointcloudByRange2D<pcl::PointXYZ>(
+  auto fake_laser_range_filtered = utils::pcl::filterPointcloudByRange2D<pcl::PointWithRange>(
       fake_laser_raw, laser_generator_.getMinRange(), laser_generator_.getMaxRange());
 
   // Typical 2D LiDAR specification: -135 ~ 135 degree
   auto fake_laser_angle_filtered =
-      utils::pcl::filterPointcloudByAngle<pcl::PointXYZ>(fake_laser_range_filtered, -135, 135);
+      utils::pcl::filterPointcloudByAngle<pcl::PointWithRange>(fake_laser_range_filtered, -135, 135);
 
   sensor_msgs::PointCloud2 msg;
   pcl::toROSMsg(*fake_laser_angle_filtered, msg);

@@ -27,7 +27,7 @@ public:
   double getMaxRange() const;
   double getMinRange() const;
 
-  bool doRayCasting(const OccupancyGridMap& map, pcl::PointCloud<pcl::PointXYZ>& laser);
+  bool doRayCasting(const OccupancyGridMap& map, pcl::PointCloud<pcl::PointWithRange>& laser);
 
 private:
   Eigen::Vector2d laser_position_{ 0, 0 };

@@ -39,7 +39,7 @@ double LaserGenerator::getMinRange() const
   return range_min_;
 }
 
-bool LaserGenerator::doRayCasting(const OccupancyGridMap& map, pcl::PointCloud<pcl::PointXYZ>& laser)
+bool LaserGenerator::doRayCasting(const OccupancyGridMap& map, pcl::PointCloud<pcl::PointWithRange>& laser)
 {
   // start at the laser
   grid_map::Index start_index;
@@ -104,11 +104,12 @@ bool LaserGenerator::doRayCasting(const OccupancyGridMap& map, pcl::PointCloud<p
       if (std::abs(map.at("occupancy", *iterator)) < 1e-3)
         continue;
 
-      pcl::PointXYZ point;
+      pcl::PointWithRange point;
       auto position = map.getPositionFrom(*iterator);
       point.x = position.x();
       point.y = position.y();
       point.z = laser_height_;
+      point.range = (position - laser_position_).norm();
       laser.points.push_back(point);
       break;
     }
